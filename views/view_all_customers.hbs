@@ -1,0 +1,241 @@
+<!--
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+ -->
+ <head>
+   <title>Administration Panel</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ </head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+   <a class="navbar-brand" href="#">CMS</a><span>Server Management</span>
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+     <span class="navbar-toggler-icon"></span>
+   </button>
+
+   <div class="collapse navbar-collapse " id="navbarSupportedContent">
+     <ul class="navbar-nav ml-auto">
+       <li class="nav-item active">
+         <a class="nav-link" href="/adminhome">Home <span class="sr-only">(current)</span></a>
+       </li>
+       <!-- <li class="nav-item">
+         <a class="nav-link" href="#">Plans</a>
+       </li> -->
+       <li class="nav-item dropdown">
+         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Accounts
+         </a>
+         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           <a class="dropdown-item" href="/add_new_account">Add new accounts</a>
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="/view_all_account">View all accounts</a>
+         </div>
+       </li>
+       <li class="nav-item dropdown">
+         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Customers
+         </a>
+         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           <a class="dropdown-item" href="add_new_customers">Add new customers</a>
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="/view_all_customers">View all customers</a>
+         </div>
+       </li>
+       <li class="nav-item dropdown">
+         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Plans
+         </a>
+         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           <a class="dropdown-item" href="/add_new_plans">Add new plans</a>
+           <div class="dropdown-divider"></div>
+
+           <a class="dropdown-item" href="/view_all_plans">view all plans</a>
+         </div>
+       </li>
+       <li class="nav-item">
+         <a class="nav-link " href="/admin_logout">Logout</a>
+       </li>
+     </ul>
+     <!-- <form class="form-inline my-2 my-lg-0">
+       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+     </form> -->
+   </div>
+  </nav>
+<!-- 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 -->
+
+<div class="container">
+<div class="jumbotron"><h2>All Customers Details</h2>{{msg}}<br/>
+  <h5>
+    <!-- <form action="/search_by_name" method="post">
+      Search by name:<input type="text" id="search" name="search"/>
+      <button type="submit" class="fa fa-search" id="sicon"></button>
+
+     </form> -->
+     Search by name:<input type="text" id="search" name="search"/>
+
+     <a href="/view_all_customers" style="float:right;text-decoration:none;color:black;">View all Customers</a>
+    </h5>
+
+</div>
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email id</th>
+        <th>Passwords</th>
+        <th>Mobile number</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="row">
+      {{#if data}}
+      {{# each data}}
+        <tr>
+        <td>{{this.name}}</td>
+        <td id="email">{{this.email}}</td>
+        <td>{{this.password}}</td>
+        <td>{{this.mobile}}</td>
+        <td><a href="/delete_customer?email={{this.email}}" onclick="return confirm('Do you really want ot delete the record?')"><span  class="fa fa-trash" aria-hidden="true"></span></a></td>
+        <td><a onclick="mfun()" data-toggle="modal" data-target="#exampleModal2" <span class="fa fa-pencil" aria-hidden="true"></span></a></td>
+      </tr>
+          {{/each}}
+          {{else}}
+          <h2>No data found</h2>
+          {{/if}}
+
+    </tbody>
+  </table>
+
+
+
+</div>
+<!-- Modal  of update -->
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Customer Deatils:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img src="https://www.jumpstarttech.com/files/2018/08/Network-Profile.png" alt="image" height="50px" width="50px"/>
+        <hr/>
+
+<div id="m-body">
+    Name:<input type="text" value="{{this.name}}" name="name"/>
+    <hr/>
+    Email:<input type="text" value="{{this.email}}"   name="email"/>
+    <hr/>
+    Mobile:<input type="text" value="{{this.mobile}}" name="mobile"/>
+    <hr/>
+    Password:<input type="text" value="{{this.password}}" name="password"/>
+</div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+<style>
+#search{
+  border-radius: 15px;
+  margin-left: 10px;
+  color:green;
+}
+#sicon{
+  text-decoration:none;
+  color: black;
+  border: none;
+}
+input[type="text"] {
+  border-radius:20px;
+  border-color: red;
+  margin-left: 15px;
+}
+</style>
+
+
+
+<script>
+ $(document).ready(function () {
+
+
+$("#search").keyup(function () {
+               // var text = $("#search").val()
+               var search = $("#search").val()
+
+               ////////////ajax code
+               var mydata = "search=" + search;
+               $.ajax({
+                   url: '/search_by_name',
+                   data: mydata,
+                   type: 'get',
+                   success: function (res) {
+                       console.log(res);
+
+                           var row = '';
+                           for (var i = 0; i < res.data.length; i++) {
+                               row = row + "<tr>" +
+                                   "<td>" + res.data[i].name + "</td>" +
+                                   "<td>" + res.data[i].email + "</td>" +
+                                   "<td>" + res.data[i].mobile + "</td>" +
+                                   "<td>" + res.data[i].password + "</td>" +
+                                   "<td><a href='/delete_customer?email="+ res.data[i].email +" onclick='return confirm('Do you really want ot delete the record?')'><span  class='fa fa-trash' aria-hidden='true'></span></a></td>"+
+                                   "<td><a data-toggle='modal' data-target='#exampleModal2' <span class='fa fa-pencil' aria-hidden='true'></span></a></td>"+
+                                   "</tr>"
+                               $("#row").html(row);
+                           }
+
+
+                   }//success response end here
+               });//ajax end
+           });//function
+       });//ready function
+
+function mfun() {
+
+  alert($('td').closest('tr').find('#email').text());
+
+
+  ////////////ajax code
+  // var mydata = "search=" + search;
+  // $.ajax({
+  //     url: '/search_by_name',
+  //     data: mydata,
+  //     type: 'get',
+  //     success: function (res) {
+  //         console.log(res);
+  //
+  //             var row = '';
+  //             for (var i = 0; i < res.data.length; i++) {
+  //                 row = row + "<tr>" +
+  //                     "<td>" + res.data[i].name + "</td>" +
+  //                     "<td>" + res.data[i].email + "</td>" +
+  //                     "<td>" + res.data[i].mobile + "</td>" +
+  //                     "<td>" + res.data[i].password + "</td>" +
+  //                     "<td><a href='/delete_customer?email="+ res.data[i].email +" onclick='return confirm('Do you really want ot delete the record?')'><span  class='fa fa-trash' aria-hidden='true'></span></a></td>"+
+  //                     "<td><a data-toggle='modal' data-target='#exampleModal2' <span class='fa fa-pencil' aria-hidden='true'></span></a></td>"+
+  //                     "</tr>"
+  //                 $("#row").html(row);
+  //             }
+  //
+  //
+  //     }//success response end here
+  // });//ajax end
+  }
+
+   </script>

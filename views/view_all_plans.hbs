@@ -1,0 +1,102 @@
+<!--
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+ -->
+ <head>
+   <title>CMS Admin/Plans</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ </head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+   <a class="navbar-brand" href="#">CMS</a><span>Server Management</span>
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+     <span class="navbar-toggler-icon"></span>
+   </button>
+
+   <div class="collapse navbar-collapse " id="navbarSupportedContent">
+     <ul class="navbar-nav ml-auto">
+       <li class="nav-item active">
+         <a class="nav-link" href="/adminhome">Home <span class="sr-only">(current)</span></a>
+       </li>
+       <!-- <li class="nav-item">
+         <a class="nav-link" href="#">Plans</a>
+       </li> -->
+       <li class="nav-item dropdown">
+         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Accounts
+         </a>
+         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           <a class="dropdown-item" href="#">Add new accounts</a>
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="#">View all accounts</a>
+         </div>
+       </li>
+       <li class="nav-item dropdown">
+         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Customers
+         </a>
+         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           <a class="dropdown-item" href="add_new_customers">Add new customers</a>
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="/view_all_customers">View all customers</a>
+         </div>
+       </li>
+       <li class="nav-item dropdown">
+         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Plans
+         </a>
+         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           <a class="dropdown-item" href="/add_new_plans">Add new plans</a>
+           <div class="dropdown-divider"></div>
+
+           <a class="dropdown-item" href="/view_all_plans">view all plans</a>
+         </div>
+       </li>
+       <li class="nav-item">
+         <a class="nav-link " href="/admin_logout">Logout</a>
+       </li>
+     </ul>
+     <!-- <form class="form-inline my-2 my-lg-0">
+       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+     </form> -->
+   </div>
+  </nav>
+<!-- 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 -->
+
+<div class="container">
+<div ><h2>All Plans</h2>{{msg}}</div>
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Plan Name</th>
+        <th>Plan Price</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{# each data}}
+        <tr>
+        <td>{{this.plan_name}}</td>
+        <td>₹ {{this.plan_price}}</td>
+
+        <td><a href="#" onclick="return confirm('Do you really want ot delete the plan?')"><span  class="fa fa-trash" aria-hidden="true"></span>delete</a></td>
+        <td><a href="#" <span class="fa fa-pencil" aria-hidden="true"></span>update</a></td>
+
+      </tr>
+          {{/each}}
+    </tbody>
+  </table>
+
+
+
+</div>

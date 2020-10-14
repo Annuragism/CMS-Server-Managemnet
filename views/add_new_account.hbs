@@ -1,0 +1,252 @@
+<!--
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+ -->
+ <head>
+   <title>Administration Panel/add_new_account</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ </head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+   <a class="navbar-brand" href="#">CMS</a><span>Server Management</span>
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+     <span class="navbar-toggler-icon"></span>
+   </button>
+
+   <div class="collapse navbar-collapse " id="navbarSupportedContent">
+     <ul class="navbar-nav ml-auto">
+       <li class="nav-item active">
+         <a class="nav-link" href="/adminhome">Home <span class="sr-only">(current)</span></a>
+       </li>
+       <!-- <li class="nav-item">
+         <a class="nav-link" href="#">Plans</a>
+       </li> -->
+       <li class="nav-item dropdown">
+         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Accounts
+         </a>
+         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           <a class="dropdown-item" href="/add_new_account">Add new accounts</a>
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="/view_all_account">View all accounts</a>
+         </div>
+       </li>
+       <li class="nav-item dropdown">
+         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Customers
+         </a>
+         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           <a class="dropdown-item" href="add_new_customers">Add new customers</a>
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="/view_all_customers">View all customers</a>
+         </div>
+       </li>
+       <li class="nav-item dropdown">
+         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Plans
+         </a>
+         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           <a class="dropdown-item" href="/add_new_plans">Add new plans</a>
+           <div class="dropdown-divider"></div>
+
+           <a class="dropdown-item" href="/view_all_plans">view all plans</a>
+         </div>
+       </li>
+       <li class="nav-item">
+         <a class="nav-link " href="/admin_logout">Logout</a>
+       </li>
+     </ul>
+     <!-- <form class="form-inline my-2 my-lg-0">
+       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+     </form> -->
+   </div>
+  </nav>
+<!-- 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 -->
+{{#if msg}}<div class="card text-white bg-success mb-3 text-center" style="height:50px;"  id="success_msg" ><div class="card-body">{{msg}}</div></div>{{/if}}
+{{#if err}}<div class="card text-white bg-danger mb-3 text-center" style="height:50px;"  id="err_msg" ><div class="card-body">{{err}}</div></div>{{/if}}
+<div style="height:60px;"></div>
+<div class="container form">
+<div class="account_form">
+    <h3>Add new  Account</h3><div style="height:60px;"></div>
+    <form action='/add_new_account_form' method="post" >
+      <div class="form-group">
+        <label for="name">Customer Name:</label>
+        <select type="text" class="form-control" id="select"  name="customer_name">
+        {{#each customer_result}}
+        <option>{{this.name}}</option>
+        {{/each}}
+      </select>
+      </div>
+      <div class="form-group">
+        <label for="name">Domain Name:</label>
+        <input type="text" class="form-control" id="name"  name="domain_name">
+      </div>
+      <div class="form-group">
+        <label for="name">Plan:</label>
+        <select type="text" class="form-control plan" id="plan"  name="plan_price">
+        {{#each plan_result}}
+        <option value="{{this.plan_price}}">{{this.plan_name}} [{{this.plan_price}}]
+        {{/each}}
+      </select>
+      </div>
+      <div class="form-group">
+        <label for="name">Domain Taken :</label>
+        <select class="form-control plan" id="domain_taken"name="domain_taken" onchange="domain_check()">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="name">Time Period:(In years)</label>
+        <input type="text" class="form-control" id="time_period"  name="time_period" required>
+      </div>
+      <div class="form-group">
+        <label for="name">Registerd Date:</label>
+        <input type="text" class="form-control" id="rdate"  name="registerd_date" onkeyup="expiry()"  readonly>
+      </div>
+      <div class="form-group">
+        <label for="name">Expiry Date:</label>
+        <input type="text" class="form-control" id="expiry_date"  name="expiry_date" readonly>
+      </div>
+      <div class="form-group" id="domain_c">
+        <label for="name">Domain Charges:</label>
+        <input type="text" class="form-control" id="domain_charges"  name="domain_charges" value="0">
+      </div>
+      <div class="form-group">
+        <label for="name">Hosting Charges:</label>
+        <input type="text" class="form-control" id="hosting_charges"  name="hosting_charges" value="3000" readonly>
+      </div>
+      <div class="form-group">
+        <label for="name">Total Charges:</label>
+        <input type="text" class="form-control" id="total_charges"  name="total_charges" onkeyup="gtotal()" readonly>
+      </div>
+
+      <input type="submit" class="btn btn-outline-dark " value="Add Cutomer"/>
+    </form>
+</div>
+</div>
+
+
+</body>
+<script>
+$(document).ready(function(){
+//alert('page loading');
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+today = dd + '-' + mm + '-' + yyyy;
+
+$('#rdate').val(today);
+// $('#domain_c').hide();
+  $('#success_msg').delay(3000).fadeOut('slow')
+  $('#err_msg').delay(3000).fadeOut('slow')
+  })
+
+  function expiry() {
+    var time_period=  $('#time_period').val();
+    // alert(time_period)
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = dd + '-' + mm + '-' + yyyy;
+    var yyy =parseInt(yyyy);
+    var tp=parseInt(time_period);
+    var year=yyy+tp;
+    var expiry=dd+'-'+mm+'-'+year;
+    // alert(expiry);
+     $('#expiry_date').val(expiry);
+
+}
+function gtotal() {
+var domain_charges= parseInt( $('#domain_charges').val());
+//alert(domain_charges);
+var hosting_charges=parseInt($('#hosting_charges').val());
+// alert(hosting_charges);
+var plan=  parseInt($('#plan').val());
+if (domain_charges=='0')
+{
+  var total=hosting_charges+plan;
+  //alert(total);
+}
+else
+{
+var total=domain_charges+hosting_charges+plan;
+}
+// alert(total);
+$('#total_charges').val(total);
+}
+
+function domain_check() {
+  var domain=$('#domain_taken').val();
+  // alert(domain);
+  if(domain=='No')
+  $('#domain_c').hide();
+  else
+  $('#domain_c').show();
+}
+</script>
+
+
+
+
+
+
+
+
+<style>
+label {
+  font-weight: bold;
+}
+input[type=text] {
+  width: 50%;
+  color: black;
+  margin-left: 250px;
+  text-align: center;
+  border-radius: 4px;
+  border-color: black;
+
+}
+input[type=submit] {
+  border-radius: 4px;
+
+}
+.form{
+  text-align: center;
+}
+#select{
+  width: 50%;
+    margin-left: 250px;
+  border-radius: 4px;
+  border-color: black;
+  cursor: pointer;
+}
+.plan{
+  width: 50%;
+    margin-left: 250px;
+  border-radius: 4px;
+  border-color: black;
+  cursor: pointer;
+}
+.account_form{
+  padding: 20px;
+  width: 100%;
+  height:1025px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+body{
+    background-color: rgba(242, 242, 211);
+}
+.container{
+  background-color: rgba(242, 242, 211);
+}
+</style>

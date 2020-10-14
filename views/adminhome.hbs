@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Administration Panel</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <!-- Plug Bootstrap Nav Bar code here -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+ <a class="navbar-brand" href="#">CMS</a><span>Server Management</span>
+ <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+   <span class="navbar-toggler-icon"></span>
+ </button>
+
+ <div class="collapse navbar-collapse " id="navbarSupportedContent">
+   <ul class="navbar-nav ml-auto">
+     <li class="nav-item active">
+       <a class="nav-link" href="/adminhome">Home <span class="sr-only">(current)</span></a>
+     </li>
+     <!-- <li class="nav-item">
+       <a class="nav-link" href="#">Plans</a>
+     </li> -->
+     <li class="nav-item dropdown">
+       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         Accounts
+       </a>
+       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+         <a class="dropdown-item" href="/add_new_account">Add new accounts</a>
+         <div class="dropdown-divider"></div>
+         <a class="dropdown-item" href="/view_all_account">View all accounts</a>
+       </div>
+     </li>
+     <li class="nav-item dropdown">
+       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         Customers
+       </a>
+       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+         <a class="dropdown-item" href="add_new_customers">Add new customers</a>
+         <div class="dropdown-divider"></div>
+         <a class="dropdown-item" href="/view_all_customers">View all customers</a>
+       </div>
+     </li>
+     <li class="nav-item dropdown">
+       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         Plans
+       </a>
+       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+         <a class="dropdown-item" href="/add_new_plans">Add new plans</a>
+         <div class="dropdown-divider"></div>
+
+         <a class="dropdown-item" href="/view_all_plans">view all plans</a>
+       </div>
+     </li>
+     <li class="nav-item">
+       <a class="nav-link " href="/admin_logout">Logout</a>
+     </li>
+   </ul>
+   <!-- <form class="form-inline my-2 my-lg-0">
+     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+   </form> -->
+ </div>
+</nav>
+{{#if msg}}<div class="card text-white bg-success mb-3 text-center"   id="success_msg" ><div class="card-body">{{msg}}</div></div>{{/if}}
+{{#if err}}<div class="card text-white bg-danger mb-3 text-center"   id="err_msg" ><div class="card-body">{{err}}</div></div>{{/if}}
+<div class="adminname">
+  <p>Hello,<br/>{{aid}}:</p>
+</div>
+<div class="container" style="padding-top:60px;">
+
+  <div class="row">
+
+    <div class="col-md-3 col-sm-6 mb-4 cbody " id="customers0" >
+      <a href="#"  style="text-decoration:none;color: white;" onClick="c1(); " ><h4><input type="hidden" value="Customers" id="value1" />Customers</h4></a>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-4 cbody" id="accounts0">
+      <a href="#" style="text-decoration:none;color: white;" onClick="c2();"   ><h4><input type="hidden" value="Accounts" id="value2" />Accounts</h4></a>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-4 cbody"  id="plans0">
+      <a href="#"  style="text-decoration:none;color: white;" onClick="c3(); "  ><h4><input type="hidden" value="Plans" id="value3" />Plans</h4></a>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-4 cbody"  id="transiction">
+      <a href="/view_transiction_history"  style="text-decoration:none;color: white;" onClick="c4(); "  ><h4><input type="hidden" value="transiction" id="value4" />View Transiction history</h4></a>
+    </div>
+
+  </div>
+  <!-- /.row -->
+  <div class="row">
+
+    <div class="col-md-3 col-sm-6 mb-4 cbody " id="customers">
+      <a href="/add_new_account"  style="text-decoration:none;color: white;"><h4>Add Customers</h4></a>
+      <a href="/view_all_customers"  style="text-decoration:none;color: white;"><h4>View Customers</h4></a>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-4 cbody" id="accounts">
+      <a href="/add_new_account" style="text-decoration:none;color: white;" ><h4> Add Accounts</h4></a>
+      <a href="/view_all_account" style="text-decoration:none;color: white;" ><h4>View Accounts</h4></a>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-4 cbody" id="plans">
+      <a href="/add_new_plans"  style="text-decoration:none;color: white;"><h4>Add Plans</h4></a>
+      <a href="/view_all_plans"  style="text-decoration:none;color: white;"><h4>View Plans</h4></a>
+    </div>
+
+
+  </div>
+
+</div>
+</div>
+<style>
+.cbody {
+  background-color: black;
+  margin: 5px;
+  height:120px;
+  text-align: center;
+  padding: 35px;
+
+
+}
+a
+{
+ text-decoration: none;
+   color: black;
+}
+.adminname{
+  height: 50px;
+  width: 100%;
+  background-color: #ccc;
+  float: left;
+  font-weight: bold;
+  padding-left: 50px;
+  margin-right: 80px;
+}
+</style>
+</body>
+<script>
+$(document).ready(function(){
+//alert('page loading');
+  $('#success_msg').delay(2000).fadeOut('slow');
+  $('#err_msg').delay(2000).fadeOut('slow');
+  $('#customers').hide();
+  $('#accounts').hide();
+  $('#plans').hide();
+
+
+  })
+
+
+  function c1(){
+    var v=$('#value1').val();
+    // alert(v);
+    if(v=='Customers')
+     {
+       $('#customers').show();
+       $('#accounts').hide();
+       $('#plans').hide();
+       $('#customers0').hide();
+       $('#accounts0').hide();
+       $('#plans0').hide();
+       $('#transiction').hide();
+     }
+
+    else {
+      $('#customers').hide();
+      $('#accounts').hide();
+      $('#plans').hide();
+      $('#transiction').hide();
+
+    }
+  }
+  function c2(){
+
+    var v=$('#value2').val();
+    // alert(v);
+   if (v=='Accounts')
+    {
+      $('#customers').hide();
+      $('#accounts').show();
+      $('#plans').hide();
+      $('#customers0').hide();
+      $('#accounts0').hide();
+      $('#plans0').hide();
+      $('#transiction').hide();
+      
+    }
+   else
+    {
+      $('#customers').hide();
+      $('#accounts').hide();
+      $('#plans').show();
+      $('#transiction').hide();
+      
+   }
+  }
+  function c3(){
+
+    var v=$('#value3').val();
+    // alert(v);
+     if(v=='Plans')
+    {
+      $('#customers').hide();
+      $('#accounts').hide();
+      $('#plans').show();
+      $('#customers0').hide();
+      $('#accounts0').hide();
+      $('#plans0').hide();
+      $('#transiction').hide();
+      
+    }
+   else
+    {
+      $('#customers').hide();
+      $('#accounts').hide();
+      $('#plans').hide();
+      $('#transiction').hide();
+      
+   }
+  }
+</script>
