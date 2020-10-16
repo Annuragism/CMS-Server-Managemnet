@@ -73,6 +73,8 @@
 <!-- 444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 -->
 
 <div class="container">
+  {{#if msg}}<div class="card text-white bg-success mb-3 text-center" style="height:50px;"  id="success_msg" ><div class="card-body">{{msg}}</div></div>{{/if}}
+
 <div class="jumbotron"><h2>All Customers Details</h2>{{msg}}<br/>
   <h5>
     <!-- <form action="/search_by_name" method="post">
@@ -104,10 +106,10 @@
         <tr>
         <td>{{this.name}}</td>
         <td id="email">{{this.email}}</td>
-        <td>{{this.password}}</td>
+        <td><div class="hidepass" >********* <input type="button" value="show" class="show_password"/></div>  <div class="password_field">{{this.password}}</div></td>
         <td>{{this.mobile}}</td>
         <td><a href="/delete_customer?email={{this.email}}" onclick="return confirm('Do you really want ot delete the record?')"><span  class="fa fa-trash" aria-hidden="true"></span></a></td>
-        <td><a onclick="mfun()" data-toggle="modal" data-target="#exampleModal2" <span class="fa fa-pencil" aria-hidden="true"></span></a></td>
+        <td><a  data-toggle="modal" data-target="#exampleModal2"  class="update" ><span class="fa fa-pencil" aria-hidden="true"></span></a></td>
       </tr>
           {{/each}}
           {{else}}
@@ -131,22 +133,33 @@
         </button>
       </div>
       <div class="modal-body">
-        <img src="https://www.jumpstarttech.com/files/2018/08/Network-Profile.png" alt="image" height="50px" width="50px"/>
-        <hr/>
+  <div class="card card-outline-secondary">
+              <div class="card-body">
+                <form autocomplete="off" class="form" role="form" id="m-body" action="/update_customer" method="post">
+                  <div class="form-group">
+                    <label for="inputName">Name</label>
+										<input class="form-control" id="namee" placeholder="Full name" type="text">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputEmail3">Email</label>
+										<input class="form-control" id="emaill"  readonly="" type="text">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputPassword3">Mobile</label>
+                    <input class="form-control" id="mobile"  required="" type="text">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputPassword3">Password</label>
+										<input class="form-control" id="password"  required="" type="text">
+                  </div>
+                  <input type="button" class="btn-outline-dark text-center" style="margin-left:35px;margin-top:15px; width:250px; border-radius:20px; height:35px;" value="Update"/>
 
-<div id="m-body">
-    Name:<input type="text" value="{{this.name}}" name="name"/>
-    <hr/>
-    Email:<input type="text" value="{{this.email}}"   name="email"/>
-    <hr/>
-    Mobile:<input type="text" value="{{this.mobile}}" name="mobile"/>
-    <hr/>
-    Password:<input type="text" value="{{this.password}}" name="password"/>
-</div>
+                </form>
+              </div>
+            </div><!-- /form card register -->
+          </div>
+        </div>
 
-      </div>
-
-    </div>
   </div>
 </div>
 </body>
@@ -164,7 +177,14 @@
 input[type="text"] {
   border-radius:20px;
   border-color: red;
-  margin-left: 15px;
+  margin-left: 35px;
+  width: 250px;
+}
+.show_password{
+  border-radius:20px;
+  border-color: red;
+  margin-left: 35px;
+  width: 50px;
 }
 </style>
 
@@ -172,8 +192,9 @@ input[type="text"] {
 
 <script>
  $(document).ready(function () {
-
-
+$(".password_field").hide();
+$(".show_password").click(function () {$(".password_field").show();$(".hidepass").hide();})
+  $('#success_msg').delay(2000).fadeOut('slow')
 $("#search").keyup(function () {
                // var text = $("#search").val()
                var search = $("#search").val()
@@ -204,38 +225,38 @@ $("#search").keyup(function () {
                    }//success response end here
                });//ajax end
            });//function
+
+
+$(".update").click(function () {
+    var email=$(this).closest('tr').find('#email').text();
+     ////////////ajax code
+             var mydata = "email=" + email;
+             $.ajax({
+                 url: '/find_customer_by_email',
+                 data: mydata,
+                 type: 'get',
+                 success: function (res) {
+                   // console.log("Ajax ");
+                     // console.log(res);
+                           var row = '';
+                           for (var i = 0; i < res.data.length; i++) {
+                             // console.log(res.data[i].name);
+                               // row = row +
+                               // "Name:<input type='text' value="+res.data[i].name+" name='cname'>"+"<hr>"+
+                               // "Email:<input type='text' value=" + res.data[i].email +" name='cemail' readonly>"+"<hr>"+
+                               // "Mobile:<input type='text' value=" + res.data[i].mobile +" name='mobile'>"+"<hr>"+
+                               // "Password:<input type='text' value=" + res.data[i].password +" name='password'>"+"<hr>"+
+                               // "<input type='submit' class='btn btn-outline-dark' value='Update'>"
+                               // $("#m-body").html(row);
+                                $("#namee").val(res.data[i].name);
+                                $("#emaill").val(res.data[i].email);
+                                $("#mobile").val(res.data[i].mobile);
+                                $("#password").val(res.data[i].password);
+                               // console.log(row);
+                             }//loop
+
+                    }//success response end here
+             });//ajax end
+           })//function end
        });//ready function
-
-function mfun() {
-
-  alert($('td').closest('tr').find('#email').text());
-
-
-  ////////////ajax code
-  // var mydata = "search=" + search;
-  // $.ajax({
-  //     url: '/search_by_name',
-  //     data: mydata,
-  //     type: 'get',
-  //     success: function (res) {
-  //         console.log(res);
-  //
-  //             var row = '';
-  //             for (var i = 0; i < res.data.length; i++) {
-  //                 row = row + "<tr>" +
-  //                     "<td>" + res.data[i].name + "</td>" +
-  //                     "<td>" + res.data[i].email + "</td>" +
-  //                     "<td>" + res.data[i].mobile + "</td>" +
-  //                     "<td>" + res.data[i].password + "</td>" +
-  //                     "<td><a href='/delete_customer?email="+ res.data[i].email +" onclick='return confirm('Do you really want ot delete the record?')'><span  class='fa fa-trash' aria-hidden='true'></span></a></td>"+
-  //                     "<td><a data-toggle='modal' data-target='#exampleModal2' <span class='fa fa-pencil' aria-hidden='true'></span></a></td>"+
-  //                     "</tr>"
-  //                 $("#row").html(row);
-  //             }
-  //
-  //
-  //     }//success response end here
-  // });//ajax end
-  }
-
    </script>

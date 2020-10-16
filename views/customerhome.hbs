@@ -74,17 +74,22 @@
         </button>
       </div>
       <div class="modal-body">
-        <img src="https://www.jumpstarttech.com/files/2018/08/Network-Profile.png" alt="image" height="50px" width="50px"/>
+          <div id="msg"></div>
+        <img src="./anurag.jpg" alt="image" height="50px" width="50px"/>
         <hr/>
     {{#each data}}
     Name:{{this.name}}
     <hr/>
-    Email:{{this.email}}
+    Email:{{this.email}}<input type="hidden" id="email" value="{{this.email}}"/>
     <hr/>
     Mobile:{{this.mobile}}
     <hr/>
     Password:{{this.password}}
     {{/each}}
+    <hr/>
+    <input type="button" id="btn_change_password" value="Change Password" />
+    <input type="text" id="text_change_password" placeholder="Type new Password" />
+    <input type="button" id="change_password" value="change password"/>
       </div>
 
     </div>
@@ -102,6 +107,7 @@
         </button>
       </div>
       <div class="modal-body">
+
         {{#each accounts_data}}
         Customer Name:{{this.customer_name}}
         <hr/>
@@ -178,7 +184,43 @@ div.polaroid {
 <script>
 $(document).ready(function(){
      // alert('loaded')
+   $('#text_change_password').hide();
+    $('#change_password').hide();
   $('#collapseExample').delay(3000).fadeOut('slow')
+  $("#btn_change_password").click(function () {
+      $('#btn_change_password').hide();
+      $('#text_change_password').show();
+        $('#change_password').show();
+
+  })//click function
+
+    $("#change_password").click(function () {
+    var new_password=$('#text_change_password').val();
+    var email=$('#email').val();
+     // alert(email)
+    ////////////ajax code
+    var sendInfo = {
+            new_password: new_password,
+            email: email
+        };
+    $.ajax({
+        url: '/update_customer_password',
+         dataType: 'json',
+        data: sendInfo,
+        type: 'get',
+        success: function (res) {
+          // alert(res.msg);
+          var msg=''+res.msg;
+               $('#msg').html(msg);
+               $('#btn_change_password').hide();
+               $('#text_change_password').hide();
+                 $('#change_password').hide();
+
+        }//success response end here
+    });//ajax end
+
+    })
+
 });
 </script>
 </body>

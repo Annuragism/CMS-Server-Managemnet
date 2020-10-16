@@ -6,6 +6,7 @@ const bodyparser = require('body-parser');
 const mysql = require('mysql')
 const hbs = require('express-handlebars');
 const session = require('express-session');
+const jwt =require('jsonwebtoken')
 //-------------------------------------------------
 //Node Mailer
 var nodemailer = require('nodemailer');
@@ -19,16 +20,13 @@ var transporter = nodemailer.createTransport({
 //----------------------------------------------------
 //creation app of express js
 var app = express();
-
-
 //configure view engine as hbs
 app.set('views', path.join(__dirname, 'views')) //location
 app.set('view engine', 'hbs') // set path (view engine,'ext-name')
 //configure layouts in mainlayout as it imports in all of the pages
 
-
 //----------------------------------------------------------------
-
+app.use(express.static("views/images"))
 //---------------------------------------------------------------
 //start session----------
 app.use(session({
@@ -445,7 +443,7 @@ app.post('/customer_login_form',(request,response)=>{
                con.query(sql2,(err,acc_result)=>{
                 if (err) throw err;
                 else
-                 // console.log(acc_result);
+                  // console.log(acc_result);
                 response.render('customerhome',{data:cresult,accounts_data:acc_result,cid:request.session.customer,msg:"Customer Login Success"});
                })
              }
@@ -479,7 +477,22 @@ app.get('/search_in_accounts',(request,response)=>{
    else
    response.json({data:result,aid:request.session.admin})
 })
+})
+//-------------------------------------------------------------------------
+//find_customer_by_email
+app.get('/find_customer_by_email',(request,response)=>{
+  var email=request.query.email;
 
+
+  var sql2="select * from customers where email=?";
+  value=[email]
+  sql2=mysql.format(sql2,value)
+  con.query(sql2,(err,result)=>{
+    console.log("Ajax is on"+result);
+   if (err) throw err;
+   else
+   response.json({data:result})
+})
 })
 //---------------------------------------------------------------------------
 //######################################################################
@@ -488,6 +501,44 @@ app.get('/view_transiction_history',(request,response)=>{
   if(request.session.admin==0){response.render('adminlogin')}
 response.render('view_transiction_history',)
 })
+//-------------------------------------------------------------------
+//forgetpassword_admin
+app.get('/forgetpassword_admin',(request,response)=>{
+response.render('forgetpassword_admin',)
+})
+//------------
+//forgetpassword_admin_form
+app.post('/forgetpassword_admin_form',(request,response)=>{
+  aemail=request.body.email;
+  var sql="select * from admin where emailid=?"
+  var values=[aemail]
+  sql=mysql.format(sql,values)
+  con.query(sql,(err,result)=>{
+    var password=result[0].password;
+    if (err) throw err;
+    else
+    {
+      console.log(password);
+      var mailOptions = {
+        from: 'nodedevelopertestingemail@gmail.com',
+        to: aemail,
+        subject: 'Password Genration for CMS',
+        text: 'Hello '+aemail+" , your Registration for CMS server Management is successfully completed please login with your registerd email and  your passwword is "+password+"  .Thank you..!!!"
+      };
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error)
+        {
+          console.log(error);
+        } else
+        {
+          response.render('forgetpassword_admin',{msg:'Password sent to your Registered Email ID'})
+
+        }
+      });
+    }
+     })
+})
+
 //---------------------------------------------------------------------
 ///show_transiction
 app.post('/show_transiction',(request,response)=>{
@@ -516,6 +567,64 @@ app.post('/show_transiction',(request,response)=>{
 
 })
 //---------------------------------------------------------------------
+//update_customer
+app.post('/update_customer',(request,response)=>{
+  var cname=request.body.cname;
+  var cemail=request.body.cemail;
+  var mobile=request.body.mobile;
+  var password=request.body.password;
+  // console.log(cname+cemail+mobile+password);
+  var sql="update customers set name=?,password=?,mobile=? where email=?;"
+  var values=[cname,password,mobile,cemail]
+  sql=mysql.format(sql,values)
+  con.query(sql,(err,result)=>{
+    // console.log(result.affectedRows);
+   if (err) throw err;
+   else if(result.affectedRows>0)
+   {
+     var sql2="select * from customers";
+     sql2=mysql.format(sql2)
+     con.query(sql2,(err,cresult)=>{
+      if (err) throw err;
+      else
+      response.render('view_all_customers',{data:cresult,aid:request.session.admin,msg:"Details Updated"})
+
+   })
+   }
+   else
+   {
+     var sql2="select * from customers";
+     sql2=mysql.format(sql2)
+     con.query(sql2,(err,result)=>{
+      if (err) throw err;
+      else
+      response.render('view_all_customers',{data:result,aid:request.session.admin,msg:"Details not Updated"})
+   })
+   }
+
+})
+})
+//---------------------------------------------------------------------
+//update_customer_password
+app.get('/update_customer_password',(request,response)=>{
+  var new_password=request.query.new_password;
+   var email=request.query.email;
+//
+// console.log(new_password);
+// console.log(email);
+  var sql="update customers set password=? where email=?;"
+  var values=[new_password,email]
+  sql=mysql.format(sql,values)
+  con.query(sql,(err,result)=>{
+  // console.log(result.affectedRows);
+   if (err) throw err;
+   else
+   {
+     response.json({msg:"Details Updated"})
+   }
+
+})
+})
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -529,9 +638,7 @@ app.post('/show_transiction',(request,response)=>{
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
+
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
@@ -557,5 +664,52 @@ response.render('home',{msg:'Customer Logout successfully'})
 })
 //---------------------------------------------------------------------
 //---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+//---------------------------------------------------------------------
+app.post('/api/login',(req,res)=>{
+  //Mock user
+  const user={
+    username:'admin',
+    email:'admin@gmail.com'
+  }
+  jwt.sign({user:user},'abcd',{expiresIn:'60s'},(err,token)=>{
+    if (err) throw err;
+    res.json({token:token})
+
+  })
+})
+//-------------
+function verifyToken(req,res,next) {
+const bearerHeader = req.headers['authorization'];
+if(typeof bearerHeader !== 'undefined'){
+  const bearer=bearerHeader.split(' ');
+  const bearerToken=bearer[1];
+  console.log(bearerToken);
+
+  req.token=bearerToken;
+  next();
+}
+else {
+  res.json({msg:"Please Provide valid Token"})
+}
+}
+//--------------
+app.post('/api/post',verifyToken,(req,res)=>{
+
+  jwt.verify(req.token,'abcd',(err,authData)=>{
+    if (err) throw err;
+    else
+    res.json({msg:"Post created",user:authData})
+
+  })
+})
 //---------------------------------------------------------------------
 //
